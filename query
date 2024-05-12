@@ -1,9 +1,3 @@
-WITH grubhub_hours AS (
-    SELECT 
-        JSON_EXTRACT(response, '$["slug"]') AS gh_slug,
-        JSON_EXTRACT(response, '$["openHours"]') AS gh_open_hours
-    FROM `arboreal-vision-339901.take_home_v2.virtual_kitchen_grubhub_hours`
-),
 ubereats_hours AS (
     SELECT 
         JSON_EXTRACT(response, CONCAT('$data.menus."', CAST(JSON_EXTRACT(response, '$.data.menuMapping[0].menuUUID') AS STRING), '".sections[0].regularHours[0].endTime')) AS ue_end_time,
@@ -11,6 +5,14 @@ ubereats_hours AS (
         JSON_EXTRACT(response, '$.data.menuMapping[0].menuUUID') AS ue_slug
     FROM `arboreal-vision-339901.take_home_v2.virtual_kitchen_ubereats_hours`
 ),
+
+WITH grubhub_hours AS (
+    SELECT 
+        JSON_EXTRACT(response, '$["slug"]') AS gh_slug,
+        JSON_EXTRACT(response, '$["openHours"]') AS gh_open_hours
+    FROM `arboreal-vision-339901.take_home_v2.virtual_kitchen_grubhub_hours`
+),
+
 hours_joined AS (
     SELECT
         gh_slug,
